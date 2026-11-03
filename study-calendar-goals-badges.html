@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>勉強カレンダー</title>
+<style>
+:root{--ink:#6d6075;--muted:#aa9eaa;--line:#f0e4e9;--bg:#fff9f7;--rose:#d9aeb9;--lav:#c9b7d8;--leaf:#a9b99a;--gold:#d9bd8d}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff7f4 0%,#fffafd 48%,#fbf8fc 100%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN",sans-serif}
+main{max-width:600px;margin:auto;padding:25px 16px 34px}header,.bar,.nav,.actions{display:flex;align-items:center;justify-content:space-between;gap:9px}
+header{padding:4px 2px 18px}h1{font-size:23px;letter-spacing:.04em;margin:0;color:#76657d}header small{display:block;margin-top:5px;letter-spacing:.04em}
+small,.hint{color:var(--muted)}button{border:1px solid var(--line);background:#fffdfd;border-radius:13px;padding:10px 12px;color:inherit;font:inherit;box-shadow:0 2px 7px #92788a0a}button:active{transform:scale(.98)}
+#subjects{font-size:12px;background:#fff9fb;padding:9px 11px}
+.bar{margin:9px 0 15px;padding:15px 16px;background:#fffdfc;border:1px solid #f2e6e7;border-radius:20px;box-shadow:0 5px 18px #987d8b0c;min-height:94px}
+.month{font-size:23px;font-weight:700;letter-spacing:.03em;color:#76657d}.season-art{width:112px;height:65px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:34px;position:relative}.season-art .mini{font-size:17px;align-self:flex-start;margin-top:7px}.season-art .main{filter:drop-shadow(0 2px 2px #a88b9b22)}#monthBar{transition:background .25s,border-color .25s}.nav{gap:6px}.nav button{width:34px;height:34px;padding:0;font-size:22px;line-height:1;color:#9a879e;background:#fff9fb}
+.week,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.week div{text-align:center;color:#aa9eaa;font-size:12px;padding:7px 0 9px}.week div:first-child{color:#cf9aa8}.week div:last-child{color:#9b9bc0}
+.day{height:72px;text-align:left;vertical-align:top;padding:8px 7px!important;border-radius:15px!important;background:#fffefe;border:1px solid #f3eaf0!important;box-shadow:0 2px 6px #92788a08;font-size:13px;position:relative}.day:nth-child(7n + 1){color:#c58e9d}.day:nth-child(7n){color:#9291b5}.day.sel{outline:2px solid #c9b7d8;border-color:transparent!important;background:#fbf6ff!important}.day .mins{display:block;font-size:10px;margin-top:9px;color:#917d9b;white-space:nowrap}.day .subject-dots{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}.day .subject-dots i{width:6px;height:6px;border-radius:50%;display:block}.day:has(.mins){border-color:#eadce9!important}
+.hint{font-size:12px;line-height:1.7;margin:13px 3px}.panel{background:#fffdfd;border:1px solid #f1e6eb;border-radius:19px;padding:16px;margin-top:15px;box-shadow:0 4px 14px #92788a08}.panel>small{letter-spacing:.04em}.primary{background:#cbb8d9;color:white;border:0;font-weight:650;box-shadow:0 3px 8px #b49fc022}.actions{margin-top:12px;flex-wrap:wrap}.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #f5edf1}input,select{padding:11px;border:1px solid #eee2eb;border-radius:11px;max-width:100%;background:white;color:var(--ink);font:inherit}.modal{position:fixed;inset:0;background:#34283b66;display:flex;align-items:end;padding:12px}.sheet{background:#fffafd;border:1px solid #f0e5ec;border-radius:22px;padding:18px;width:100%;max-width:580px;margin:auto;max-height:85vh;overflow:auto}.hide{display:none}.total{font-size:25px;font-weight:bold;color:#a58bb8;margin-top:5px}.chart-switch{display:flex;gap:8px;margin:12px 0}.chart-switch button.active{background:#cbb8d9;color:white;border-color:#cbb8d9}.chart{display:flex;align-items:flex-end;gap:7px;height:180px;padding:12px 3px 0;border-bottom:1px solid #eee3eb}.chart-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}.chart-bar-wrap{height:135px;width:100%;display:flex;align-items:flex-end;justify-content:center}.chart-bar{width:min(28px,85%);min-height:2px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#d8c6e6,#e9cbd9)}.chart-label{font-size:10px;color:#9b8ca0;white-space:nowrap}.chart-value{font-size:9px;color:#9b8ca0;min-height:12px}.chart-summary{font-size:13px;color:#98869f;margin-top:10px}.progress-track{height:10px;background:#f4edf3;border-radius:99px;overflow:hidden;margin:7px 0 12px}.progress-fill{height:100%;background:linear-gradient(90deg,#e9bfd0,#cbb8d9);border-radius:99px}.goal-line{font-size:13px;display:flex;justify-content:space-between;gap:8px}.badge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.badge-item{background:#fff8fb;border:1px solid #f1e5ed;border-radius:14px;padding:11px;font-size:12px}.badge-item.locked{opacity:.42;filter:grayscale(.7)}.badge-icon{font-size:22px;display:block;margin-bottom:4px}.quote{font-size:15px;line-height:1.8;color:#8c7898;text-align:center;padding:8px 4px}
+</style>
+<main>
+<header><div><h1>勉強カレンダー</h1><small>今日のがんばりを、少しずつ。</small></div><button id="subjects">教科設定</button></header>
+<div class="bar" id="monthBar"><div><span class="month" id="month"></span><small id="season-label" style="display:block;margin-top:5px;letter-spacing:.05em">seasonal study days</small></div><div class="season-art" id="season-art" aria-hidden="true"></div><div class="nav"><button id="prev">‹</button><button id="next">›</button></div></div>
+<div class="week"><div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div></div><div class="grid" id="grid"></div>
+<p class="hint">勉強時間が長い日ほど背景が濃くなるよ。下の小さな丸は、その日に勉強した教科の色だよ。</p><div class="hint" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:-8px"><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e9aebe;margin-right:4px"></i>国語</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#9bc9e8;margin-right:4px"></i>数学</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#b9a8df;margin-right:4px"></i>英語</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#a8cdb0;margin-right:4px"></i>理科</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#e8cf8e;margin-right:4px"></i>社会</span><span><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#c9c2cc;margin-right:4px"></i>その他</span></div>
+<section class="panel"><small>今月の勉強時間</small><div class="total" id="monthTotal">0分</div><div class="actions"><button class="primary" id="today">今日の勉強を記録</button><button id="timer">タイマーで勉強</button><button id="stats">教科別の合計</button><button id="graph">勉強時間グラフ</button></div></section>
+<section class="panel">
+<b>今月の目標</b>
+<div id="goalProgress"></div>
+<button id="editGoals">目標時間を設定する</button>
+</section>
+<section class="panel">
+<b>がんばりバッジ</b>
+<p class="hint" style="margin:6px 0">勉強を続けるとバッジが増えるよ！</p>
+<div id="badges" class="badge-grid"></div>
+</section>
+<section class="panel">
+<b>今日のひとこと</b>
+<div class="quote" id="quote"></div>
+</section>
+<section class="panel"><b id="dateTitle">日付を選んでね</b><p class="hint" id="summary">カレンダーの日付をタップすると、その日の記録が見られるよ。</p><div id="details"></div><button class="primary" id="add">この日に記録を追加</button></section>
+<p class="hint" style="text-align:center;font-size:11px">記録はこのブラウザに保存されます。</p></main>
+<div class="modal hide" id="modal"><div class="sheet"><div class="actions"><b id="modalTitle"></b><button id="close">閉じる</button></div><div id="content"></div></div></div>
+<script>
+const $=x=>document.getElementById(x),now=new Date();let view=new Date(now.getFullYear(),now.getMonth(),1),sel=key(now),data=JSON.parse(localStorage.studyRecords||'{}'),subs=JSON.parse(localStorage.studySubjects||'["国語","数学","英語","理科","社会","その他"]');if(!subs.includes('その他'))subs.push('その他');
+function key(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function total(k){return(data[k]||[]).reduce((a,r)=>a+ +r.m,0)}function fmt(n){return n>=60?Math.floor(n/60)+'時間'+(n%60?n%60+'分':''):n+'分'}function save(){localStorage.studyRecords=JSON.stringify(data);localStorage.studySubjects=JSON.stringify(subs)}
+const subjectColors={'国語':'#e9aebe','数学':'#9bc9e8','英語':'#b9a8df','理科':'#a8cdb0','社会':'#e8cf8e','その他':'#c9c2cc'};
+function subjectColor(name){return subjectColors[name]||'#c9c2cc'}
+const defaultGoals={daily:60,weekly:420,monthly:1800};
+let goals={...defaultGoals,...JSON.parse(localStorage.studyGoals||'{}')};
+const quotes=[
+'昨日の自分より、ほんの少し前へ。',
+'5分でも進めたら、それは立派な一歩。',
+'コツコツ積み重ねた時間は、ちゃんと力になるよ。',
+'完璧じゃなくて大丈夫。続けることがいちばん。',
+'今日のがんばりが、未来の自分を助けてくれる。',
+'休む日も大切。自分のペースで進もう。',
+'小さな「できた！」を増やしていこう。',
+'焦らず、一歩ずつ。ちゃんと進んでるよ。'
+];
+function dateKeys(){return Object.keys(data).filter(k=>total(k)>0).sort()}
+function dayTotal(d){return total(key(d))}
+function rangeTotal(start,end){let sum=0;for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1))sum+=dayTotal(d);return sum}
+function mondayStart(d){let x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-(x.getDay()+6)%7);return x}
+function goalHTML(label,value,target){
+ let pct=target>0?Math.min(100,Math.round(value/target*100)):0;
+ return `<div class="goal-line"><span>${label}</span><b>${fmt(value)} / ${fmt(target)}</b></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>`;
+}
+function renderGoals(){
+ let today=new Date(),monthStart=new Date(today.getFullYear(),today.getMonth(),1),monthEnd=new Date(today.getFullYear(),today.getMonth()+1,0);
+ let weekStart=mondayStart(today),weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
+ let month=rangeTotal(monthStart,monthEnd),week=rangeTotal(weekStart,weekEnd),day=dayTotal(today);
+ $('goalProgress').innerHTML=goalHTML('今日',day,goals.daily)+goalHTML('今週',week,goals.weekly)+goalHTML('今月',month,goals.monthly);
+}
+function streak(){
+ let d=new Date(),n=0;
+ while(dayTotal(d)>0){n++;d.setDate(d.getDate()-1)}
+ return n;
+}
+function renderBadges(){
+ let totalAll=dateKeys().reduce((a,k)=>a+total(k),0),days=dateKeys().length,st=streak();
+ let today=new Date(),weekStart=mondayStart(today),weekEnd=new Date(weekStart);weekEnd.setDate(weekEnd.getDate()+6);
+ let monthStart=new Date(today.getFullYear(),today.getMonth(),1),monthEnd=new Date(today.getFullYear(),today.getMonth()+1,0);
+ let week=rangeTotal(weekStart,weekEnd),month=rangeTotal(monthStart,monthEnd);
+ let list=[
+  ['🌱','はじめの一歩','1日勉強する',days>=1],
+  ['⭐','合計5時間','累計5時間達成',totalAll>=300],
+  ['🌟','合計10時間','累計10時間達成',totalAll>=600],
+  ['💎','合計30時間','累計30時間達成',totalAll>=1800],
+  ['🔥','3日連続','3日連続で勉強',st>=3],
+  ['👑','7日連続','7日連続で勉強',st>=7],
+  ['🌸','今日の目標','今日の目標を達成',dayTotal(today)>=goals.daily],
+  ['🎀','週間目標','今週の目標を達成',week>=goals.weekly],
+  ['🏆','月間目標','今月の目標を達成',month>=goals.monthly]
+ ];
+ $('badges').innerHTML=list.map(([icon,name,desc,earned])=>`<div class="badge-item ${earned?'':'locked'}"><span class="badge-icon">${icon}</span><b>${name}</b><div>${earned?'達成！':desc}</div></div>`).join('');
+}
+function renderQuote(){
+ let index=Math.floor(Date.now()/86400000)%quotes.length;
+ $('quote').textContent='「'+quotes[index]+'」';
+}
+function openGoals(){
+ modal('勉強目標の設定',`<p>1日の目標（分）</p><input id="goalDaily" type="number" min="1" value="${goals.daily}"><p>1週間の目標（分）</p><input id="goalWeekly" type="number" min="1" value="${goals.weekly}"><p>1か月の目標（分）</p><input id="goalMonthly" type="number" min="1" value="${goals.monthly}"><p><button class="primary" id="saveGoals">保存する</button></p><small>例：60分＝1時間</small>`);
+ $('saveGoals').onclick=()=>{
+  let d=+$('goalDaily').value,w=+$('goalWeekly').value,m=+$('goalMonthly').value;
+  if(d<1||w<1||m<1)return alert('それぞれ1分以上で設定してね');
+  goals={daily:d,weekly:w,monthly:m};localStorage.studyGoals=JSON.stringify(goals);
+  $('modal').classList.add('hide');renderGoals();renderBadges();
+ };
+}
+
+
+const seasons=[
+{label:'snowy study days',art:'<span class="mini">❄️</span><span class="main">☃️</span><span class="mini">✨</span>',bg:'#f7f8ff',line:'#e6e9f6'},
+{label:'sweet study days',art:'<span class="mini">♡</span><span class="main">🧸</span><span class="mini">♡</span>',bg:'#fff5f8',line:'#f5e1e9'},
+{label:'tulip study days',art:'<span class="mini">✿</span><span class="main">🌷</span><span class="mini">✧</span>',bg:'#fffaf4',line:'#f2e8dc'},
+{label:'sakura study days',art:'<span class="mini">✿</span><span class="main">🌸</span><span class="mini">❀</span>',bg:'#fff6f8',line:'#f3e1e8'},
+{label:'flower study days',art:'<span class="mini">✧</span><span class="main">💐</span><span class="mini">✿</span>',bg:'#f8fbf5',line:'#e5eddf'},
+{label:'hydrangea study days',art:'<span class="mini">☂️</span><span class="main">🪻</span><span class="mini">💧</span>',bg:'#f7f7ff',line:'#e5e5f4'},
+{label:'sunny study days',art:'<span class="mini">✿</span><span class="main">🌻</span><span class="mini">☀️</span>',bg:'#fffaf1',line:'#f3ead8'},
+{label:'ocean study days',art:'<span class="mini">𓇼</span><span class="main">🐬</span><span class="mini">〜</span>',bg:'#f3f9ff',line:'#deebf5'},
+{label:'gentle study days',art:'<span class="mini">✿</span><span class="main">🌼</span><span class="mini">✧</span>',bg:'#fff8f7',line:'#f0e4e5'},
+{label:'halloween study days',art:'<span class="mini">✦</span><span class="main">🎃</span><span class="mini">🦇</span>',bg:'#fff8f2',line:'#f0e5d9'},
+{label:'autumn study days',art:'<span class="mini">🍂</span><span class="main">🐿️</span><span class="mini">🌰</span>',bg:'#fff8f1',line:'#f0e4d7'},
+{label:'holy night study days',art:'<span class="mini">⭐</span><span class="main">🎄</span><span class="mini">🎁</span>',bg:'#f7f7ff',line:'#e6e4f2'}
+];
+function draw(){let y=view.getFullYear(),m=view.getMonth()+1,first=new Date(y,m-1,1).getDay(),last=new Date(y,m,0).getDate();$('month').textContent=y+'年'+m+'月';let theme=seasons[m-1];$('season-label').textContent=theme.label;$('season-art').innerHTML=theme.art;$('monthBar').style.background=theme.bg;$('monthBar').style.borderColor=theme.line;let h='';for(let i=0;i<first;i++)h+='<div></div>';for(let d=1;d<=last;d++){let k=key(new Date(y,m-1,d)),v=total(k),bg=v===0?'white':v<30?'#fbf1f7':v<60?'#f5e3f0':v<120?'#edd7ed':'#dfc7e8';let used=[...new Set((data[k]||[]).map(r=>r.s))];let dots=used.length?`<span class="subject-dots">${used.map(n=>`<i title="${n}" style="background:${subjectColor(n)}"></i>`).join('')}</span>`:'';h+=`<button class="day ${k===sel?'sel':''}" data-k="${k}" style="background:${bg}">${d}${v?`<span class="mins">${fmt(v)}</span>`:''}${dots}</button>`}$('grid').innerHTML=h;document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{sel=b.dataset.k;draw()});let sum=Object.keys(data).filter(k=>k.startsWith(y+'-'+String(m).padStart(2,'0'))).reduce((a,k)=>a+total(k),0);$('monthTotal').textContent=fmt(sum);detail()}
+function detail(){let a=data[sel]||[];$('dateTitle').textContent=Number(sel.slice(-2))+'日の記録';$('summary').textContent=a.length?'合計 '+fmt(total(sel)):'まだ記録がないよ。';$('details').innerHTML=a.map((r,i)=>`<div class="row"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${subjectColor(r.s)};margin-right:7px"></i>${r.s}</span><b>${fmt(+r.m)}</b><button data-del="${i}">削除</button></div>`).join('');document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{a.splice(+b.dataset.del,1);save();draw()})}
+function modal(t,html){$('modalTitle').textContent=t;$('content').innerHTML=html;$('modal').classList.remove('hide')}
+function add(){modal('勉強を記録',`<p>教科</p><select id="s">${subs.map(s=>`<option>${s}</option>`).join('')}</select><p>勉強時間（分）</p><input id="m" type="number" min="1" placeholder="例：30"><p><button class="primary" id="save">保存する</button></p><small>記録する日：${sel}</small>`);$('save').onclick=()=>{let m=+$('m').value;if(m<1)return alert('勉強時間を入力してね');(data[sel]??=[]).push({s:$('s').value,m});save();$('modal').classList.add('hide');draw()}}
+
+
+function graphHTML(mode){
+ const base=new Date(sel+'T12:00:00');
+ let dates=[];
+ if(mode==='week'){
+   for(let i=6;i>=0;i--){let d=new Date(base);d.setDate(d.getDate()-i);dates.push(d)}
+ }else{
+   let y=base.getFullYear(),m=base.getMonth();
+   for(let d=1;d<=new Date(y,m+1,0).getDate();d++)dates.push(new Date(y,m,d));
+ }
+ let vals=dates.map(d=>({d,k:key(d),v:total(key(d))}));
+ let max=Math.max(60,...vals.map(x=>x.v));
+ let sum=vals.reduce((a,x)=>a+x.v,0);
+ let shown=mode==='week'?vals:vals.filter((x,i)=>i%3===0||i===vals.length-1);
+ let bars=shown.map(x=>`<div class="chart-col"><div class="chart-value">${x.v?Math.floor(x.v/60)+'h'+(x.v%60?x.v%60+'m':''):''}</div><div class="chart-bar-wrap"><div class="chart-bar" style="height:${Math.max(x.v?4:2,x.v/max*135)}px"></div></div><div class="chart-label">${mode==='week'?['日','月','火','水','木','金','土'][x.d.getDay()]:x.d.getDate()+'日'}</div></div>`).join('');
+ return `<div class="chart">${bars}</div><div class="chart-summary">${mode==='week'?'選んだ日から過去7日間':'選んだ日が含まれる月'}の合計：<b>${fmt(sum)}</b></div>`;
+}
+function openGraph(mode='week'){
+ modal('勉強時間グラフ',`<div class="chart-switch"><button id="weekGraph" class="${mode==='week'?'active':''}">週間</button><button id="monthGraph" class="${mode==='month'?'active':''}">月間</button></div><div id="chartArea">${graphHTML(mode)}</div>`);
+ $('weekGraph').onclick=()=>openGraph('week');$('monthGraph').onclick=()=>openGraph('month');
+}
+
+let timerStarted=0,timerElapsed=0,timerTick=null,timerRunning=false;
+function timerText(sec){let h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;return [h,m,s].map(n=>String(n).padStart(2,'0')).join(':')}
+function timerDisplay(){let sec=timerElapsed+(timerRunning?Math.floor((Date.now()-timerStarted)/1000):0);let el=$('clock');if(el)el.textContent=timerText(sec)}
+function openTimer(){
+ timerElapsed=0;timerRunning=false;clearInterval(timerTick);
+ modal('勉強タイマー',`<p>教科</p><select id="timerSubject">${subs.map(s=>`<option>${s}</option>`).join('')}</select><div id="clock" style="font-size:38px;text-align:center;font-weight:700;color:#a58bb8;padding:22px 0;font-variant-numeric:tabular-nums">00:00:00</div><p class="actions"><button class="primary" id="startTimer">スタート</button><button id="pauseTimer">一時停止</button><button id="finishTimer">記録して終了</button></p><small>記録する日：${sel}</small>`);
+ $('startTimer').onclick=()=>{if(!timerRunning){timerStarted=Date.now();timerRunning=true;timerTick=setInterval(timerDisplay,250);timerDisplay()}};
+ $('pauseTimer').onclick=()=>{if(timerRunning){timerElapsed+=Math.floor((Date.now()-timerStarted)/1000);timerRunning=false;clearInterval(timerTick);timerDisplay()}};
+ $('finishTimer').onclick=()=>{if(timerRunning){timerElapsed+=Math.floor((Date.now()-timerStarted)/1000);timerRunning=false;clearInterval(timerTick)}let mins=Math.floor(timerElapsed/60);if(mins<1){alert('1分以上勉強してから記録してね');return}(data[sel]??=[]).push({s:$('timerSubject').value,m:mins});save();$('modal').classList.add('hide');draw();};
+}
+
+$('editGoals').onclick=openGoals;$('timer').onclick=openTimer;$('graph').onclick=()=>openGraph('week');$('prev').onclick=()=>{view.setMonth(view.getMonth()-1);draw()};$('next').onclick=()=>{view.setMonth(view.getMonth()+1);draw()};$('today').onclick=()=>{sel=key(now);view=new Date(now.getFullYear(),now.getMonth(),1);draw();add()};$('add').onclick=add;$('close').onclick=()=>$('modal').classList.add('hide');$('stats').onclick=()=>{let t={};Object.values(data).flat().forEach(r=>t[r.s]=(t[r.s]||0)+ +r.m);modal('教科別の合計',Object.entries(t).map(([s,m])=>`<div class="row">${s}<b>${fmt(m)}</b></div>`).join('')||'まだ記録がないよ。')};
+$('subjects').onclick=()=>{modal('教科設定',subs.map((s,i)=>`<div class="row">${s}<button data-rm="${i}">削除</button></div>`).join('')+'<p><input id="newsub" placeholder="新しい教科"><button class="primary" id="addsub">追加</button></p>');document.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{subs.splice(+b.dataset.rm,1);save();$('subjects').click()});$('addsub').onclick=()=>{let s=$('newsub').value.trim();if(s&&!subs.includes(s)){subs.push(s);save();$('subjects').click()}}};draw();renderGoals();renderBadges();renderQuote();
+</script>
